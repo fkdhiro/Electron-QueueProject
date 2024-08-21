@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OCR App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        #status {
+            margin-bottom: 10px;
+        }
+        #toggleCapture {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ed5454;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #toggleCapture.disabled {
+            background-color: #48be44;
+            cursor: not-allowed;
+        }
+        .ocr-item {
+            margin-bottom: 20px;
+        }
+        .ocr-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <h1>OCR App</h1>
+    <div>Pressione "Z"</div>
+    <div id="status">Captura de tela ativada</div>
+    <button id="toggleCapture">Desativar Captura de Tela</button>
+    <div id="results"></div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        ipcRenderer.on('ocr-result', (event, ocrResults) => {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = ''; // Limpa resultados anteriores
+
+            ocrResults.forEach((result, index) => {
+                const ocrItem = document.createElement('div');
+                ocrItem.classList.add('ocr-item');
+                
+                const image = document.createElement('img');
+                image.src = `data:image/png;base64,${result.image}`;
+                
+                const text = document.createElement('pre');
+                text.textContent = result.textArray.join('\n');
+                
+                ocrItem.appendChild(image);
+                ocrItem.appendChild(text);
+                
+                resultsDiv.appendChild(ocrItem);
+            });
+        });
+
+        ipcRenderer.on('status', (event, { captureEnabled, ocrResults }) => {
+            const statusDiv = document.getElementById('status');
+            const toggleButton = document.getElementById('toggleCapture');
+            statusDiv.textContent = `Captura de tela ${captureEnabled ? 'ativada' : 'desativada'}`;
+            toggleButton.textContent = captureEnabled ? 'Desativar Captura de Tela' : 'Ativar Captura de Tela';
+            toggleButton.classList.toggle('disabled', !captureEnabled);
+        });
+
+        document.getElementById('toggleCapture').addEventListener('click', () => {
+            ipcRenderer.send('toggle-capture');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "name": "electron-queue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^32.0.1"
+  },
+  "dependencies": {
+    "jimp": "^0.22.12",
+    "screenshot-desktop": "^1.15.0",
+    "tesseract.js": "^5.1.0"
+  }
+}

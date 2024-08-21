@@ -1,0 +1,12 @@
+# Ignorar a pasta node_modules
+node_modules/
+
+# Ignorar arquivos de log
+*.log
+
+# Ignorar o executável do Electron (ajuste o caminho conforme necessário)
+node_modules/electron/dist/electron.exe
+
+# Ignorar arquivos temporários e outros não necessários
+*.tmp
+*.swp
